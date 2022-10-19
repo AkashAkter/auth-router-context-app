@@ -1,7 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../contexts/UserContext';
 
 const Register = () => {
+
+    const { createUser, signInWithGoogle } = useContext(AuthContext);
+    // console.log(createUser);
+
+
     const handleSubmit = event => {
         event.preventDefault();
 
@@ -11,6 +17,25 @@ const Register = () => {
         const email = form.email.value;
         const password = form.password.value;
         console.log(name, email, password);
+
+        createUser(email, password)
+            .then(result => {
+                const user = result.user;
+                console.log(user);
+                form.reset();
+            })
+            .catch(error => {
+                console.error('ERROR: ', error)
+            })
+    }
+
+    const handleGoogleSignIn = () => {
+        signInWithGoogle()
+            .then(result => {
+                const user = result.user;
+                console.log(user);
+            })
+            .catch(error => console.error(error))
     }
 
 
@@ -57,6 +82,8 @@ const Register = () => {
                                 <button className="btn btn-primary">register</button>
                             </div>
                         </form>
+
+                        <button onClick={handleGoogleSignIn} className='btn btn-outline btn-success'>Sign in with Google</button>
 
                     </div>
                 </div>
